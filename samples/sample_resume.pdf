@@ -1,0 +1,96 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 1861 >>
+stream
+BT
+/F1 10 Tf
+50 760 Td
+16 TL
+(Alex Mercer) Tj
+T*
+(alex.mercer@example.com | San Francisco, CA | github.com/alexmercer) Tj
+T*
+(--------------------------------------------------------------------------------) Tj
+T*
+(PROFESSIONAL SUMMARY) Tj
+T*
+(Passionate Software Engineer with 3+ years of experience specializing in Python,) Tj
+T*
+(Flask, and relational databases. Proven track record of designing REST APIs,) Tj
+T*
+(developing microservices with Docker, and collaborating in fast-paced Agile) Tj
+T*
+(environments. Strong problem solving and communication skills.) Tj
+T*
+() Tj
+T*
+(TECHNICAL SKILLS) Tj
+T*
+(* Programming Languages: Python, JavaScript, SQL, HTML, CSS) Tj
+T*
+(* Web & Frameworks: Flask, Django, React, Bootstrap, REST API) Tj
+T*
+(* Databases: PostgreSQL, SQLite, Redis) Tj
+T*
+(* DevOps & Tools: Git, GitHub, Docker, Linux, CI/CD, Unit Testing, Pytest) Tj
+T*
+(* Soft Skills: Problem Solving, Teamwork, Communication, Time Management) Tj
+T*
+() Tj
+T*
+(PROFESSIONAL EXPERIENCE) Tj
+T*
+(Software Engineer | CloudScale Technologies \(2022 - Present\)) Tj
+T*
+(- Engineered high-throughput REST APIs using Python and Flask, reducing latency by 35%.) Tj
+T*
+(- Implemented caching with Redis and optimized queries for PostgreSQL databases.) Tj
+T*
+(- Containerized backend services with Docker and automated testing via Git and CI/CD.) Tj
+T*
+(- Participated in Agile sprint planning, daily standups, and peer code reviews.) Tj
+T*
+() Tj
+T*
+(Junior Developer | DataPulse Solutions \(2020 - 2022\)) Tj
+T*
+(- Built interactive frontend features using JavaScript, React, and Bootstrap.) Tj
+T*
+(- Wrote automated test suites using Pytest, improving code coverage to 88%.) Tj
+T*
+(- Demonstrated consistent teamwork, communication, and adaptability.) Tj
+T*
+() Tj
+T*
+(EDUCATION) Tj
+T*
+(Bachelor of Science in Computer Science | State University \(2016 - 2020\)) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000121 00000 n 
+0000000247 00000 n 
+0000000317 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+2230
+%%EOF

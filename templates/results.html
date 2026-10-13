@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Gap Analysis Results | AI Resume & Skill Gap Analyzer{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    
+    <!-- Top Action Bar -->
+    <div class="results-header-bar">
+        <div>
+            <a href="{{ url_for('index') }}" class="btn-back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Analyze Another Resume
+            </a>
+            <h1 class="results-main-title">Skill Gap Analysis Report</h1>
+            <p class="results-subtitle">Evaluated <strong>{{ filename }}</strong> against the provided job description</p>
+        </div>
+        <div class="header-actions">
+            <button onclick="window.print()" class="btn-secondary-action">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Print / Save PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Match Percentage Hero Card -->
+    <div class="score-card {% if results.match_percentage >= 75 %}score-high{% elif results.match_percentage >= 50 %}score-mid{% else %}score-low{% endif %}">
+        <div class="score-grid">
+            
+            <!-- Circular Progress / Meter -->
+            <div class="score-visual-col">
+                <div class="score-circle-wrapper">
+                    <svg class="score-svg" viewBox="0 0 120 120">
+                        <circle class="score-bg-circle" cx="60" cy="60" r="50" />
+                        <circle class="score-fill-circle" cx="60" cy="60" r="50" 
+                            style="stroke-dasharray: 314.15; stroke-dashoffset: {{ (314.15 - (314.15 * results.match_percentage / 100))|round(2) }};" />
+                    </svg>
+                    <div class="score-value-text">
+                        <span class="score-number">{{ results.match_percentage }}%</span>
+                        <span class="score-label">Keyword Match</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Explanation & Transparent Formula -->
+            <div class="score-details-col">
+                <div class="score-level-badge">
+                    {% if results.match_percentage >= 75 %}
+                        <span class="badge-status status-high">Strong Keyword Alignment</span>
+                    {% elif results.match_percentage >= 50 %}
+                        <span class="badge-status status-mid">Moderate Keyword Alignment</span>
+                    {% else %}
+                        <span class="badge-status status-low">Low Keyword Alignment</span>
+                    {% endif %}
+                </div>
+
+                <h2 class="score-heading">
+                    {% if results.match_percentage >= 75 %}
+                        Your resume matches the majority of required skills!
+                    {% elif results.match_percentage >= 50 %}
+                        Good foundation with a few notable skill gaps.
+                    {% else %}
+                        Significant technical &amp; keyword gaps identified.
+                    {% endif %}
+                </h2>
+
+                <div class="formula-box">
+                    <span class="formula-title">Transparent Formula:</span>
+                    <code class="formula-code">{{ results.formula_explanation }}</code>
+                </div>
+
+                <!-- Ethical Disclaimer Notice -->
+                <div class="callout-disclaimer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span><strong>Notice:</strong> {{ results.disclaimer }}</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Quick Metrics Deck -->
+    <div class="metrics-row">
+        <div class="metric-card">
+            <span class="metric-val text-primary">{{ results.total_job_skills_count }}</span>
+            <span class="metric-lbl">Job Skills Required</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-val text-success">{{ results.matched_count }}</span>
+            <span class="metric-lbl">Matching Skills Found</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-val text-danger">{{ results.missing_count }}</span>
+            <span class="metric-lbl">Missing Skills (Gap)</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-val text-info">{{ results.additional_count }}</span>
+            <span class="metric-lbl">Additional Strengths</span>
+        </div>
+    </div>
+
+    <!-- Main Breakdown: Matched vs Missing Skills -->
+    <div class="skills-comparison-grid">
+        
+        <!-- Matched Skills Section -->
+        <div class="skill-deck-card matched-deck">
+            <div class="deck-header">
+                <div class="deck-title-wrap">
+                    <div class="deck-icon icon-matched">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <h3>Matching Skills ({{ results.matched_count }})</h3>
+                </div>
+                <span class="deck-subtitle">Found in both your resume and the job description</span>
+            </div>
+
+            <div class="deck-body">
+                {% if results.matching_skills %}
+                    <div class="tags-container">
+                        {% for skill in results.matching_skills %}
+                            <span class="skill-tag tag-matched">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                {{ skill|title }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-deck-state">
+                        <p>No matching keywords identified between the resume and the job description.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Missing Skills Section -->
+        <div class="skill-deck-card missing-deck">
+            <div class="deck-header">
+                <div class="deck-title-wrap">
+                    <div class="deck-icon icon-missing">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </div>
+                    <h3>Missing Skills ({{ results.missing_count }})</h3>
+                </div>
+                <span class="deck-subtitle">Requested in job description, but not detected in resume</span>
+            </div>
+
+            <div class="deck-body">
+                {% if results.missing_skills %}
+                    <div class="tags-container">
+                        {% for skill in results.missing_skills %}
+                            <span class="skill-tag tag-missing">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                {{ skill|title }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-deck-state state-success">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <p>No missing skills! Your resume covers all recognized requirements.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Additional Skills (Candidate Strengths) -->
+    {% if results.additional_skills %}
+    <div class="card-standard additional-skills-card">
+        <div class="card-header-simple">
+            <div class="header-icon-wrap">
+                <div class="deck-icon icon-additional">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Additional Resume Proficiencies ({{ results.additional_count }})</h3>
+                    <p class="card-desc">Skills found on your resume that were not explicitly listed in the job description</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="tags-container">
+                {% for skill in results.additional_skills %}
+                    <span class="skill-tag tag-additional">{{ skill|title }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Categorized Skill Domain Breakdown -->
+    <div class="card-standard category-breakdown-card">
+        <div class="card-header-simple">
+            <h3 class="card-title">Category-by-Category Alignment</h3>
+            <p class="card-desc">Detailed comparison across software, infrastructure, data, and soft skills</p>
+        </div>
+        <div class="card-body">
+            <div class="category-list">
+                {% for category_name, data in results.category_breakdown.items() %}
+                    <div class="category-item">
+                        <div class="category-header">
+                            <span class="category-title">{{ category_name }}</span>
+                            <div class="category-stats">
+                                <span class="category-ratio">{{ data.matched|length }} of {{ data.total_required }} required</span>
+                                <span class="category-pill-pct">{{ data.match_percentage }}%</span>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill {% if data.match_percentage >= 75 %}bar-high{% elif data.match_percentage >= 50 %}bar-mid{% else %}bar-low{% endif %}" 
+                                style="width: {{ data.match_percentage }}%;"></div>
+                        </div>
+
+                        <!-- Categorized Tags -->
+                        <div class="category-tags-preview">
+                            {% for s in data.matched %}
+                                <span class="mini-tag mini-tag-matched" title="Matched requirement">&check; {{ s|title }}</span>
+                            {% endfor %}
+                            {% for s in data.missing %}
+                                <span class="mini-tag mini-tag-missing" title="Missing requirement">&times; {{ s|title }}</span>
+                            {% endfor %}
+                            {% for s in data.additional %}
+                                <span class="mini-tag mini-tag-additional" title="Additional resume skill">+ {{ s|title }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Actionable Recommendations Card -->
+    <div class="card-standard recommendations-card">
+        <div class="card-header-simple">
+            <div class="header-icon-wrap">
+                <div class="deck-icon icon-advice">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Actionable Advice to Close Your Skill Gap</h3>
+                    <p class="card-desc">Targeted recommendations based on your missing keywords and match score</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="recommendations-list">
+                {% for rec in results.recommendations %}
+                    <div class="rec-item rec-{{ rec.type }}">
+                        <div class="rec-title">{{ rec.title }}</div>
+                        <div class="rec-body">{{ rec.body }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Text Inspection Accordion -->
+    <details class="text-inspection-details">
+        <summary class="inspection-summary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            View Extracted Text Previews
+        </summary>
+        <div class="inspection-content">
+            <div class="inspection-grid">
+                <div>
+                    <h4>Extracted Resume Preview ({{ resume_char_count }} chars)</h4>
+                    <pre class="inspection-pre">{{ resume_preview }}</pre>
+                </div>
+                <div>
+                    <h4>Job Description Preview ({{ jd_char_count }} chars)</h4>
+                    <pre class="inspection-pre">{{ jd_preview }}</pre>
+                </div>
+            </div>
+        </div>
+    </details>
+
+    <!-- Bottom Action Button -->
+    <div class="results-footer-cta">
+        <a href="{{ url_for('index') }}" class="btn-primary-analyze">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Analyze Another Resume
+        </a>
+    </div>
+
+</div>
+{% endblock %}

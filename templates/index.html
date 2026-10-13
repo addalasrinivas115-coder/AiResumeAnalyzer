@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Upload & Analyze | AI Resume & Skill Gap Analyzer{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-badge">AI Skill Matching &bull; Beginner Friendly</div>
+    <h1 class="hero-title">Discover Your Skill Gap in Seconds</h1>
+    <p class="hero-subtitle">
+        Upload your PDF resume and paste any target job description. Our natural language processing engine parses your technical proficiencies, identifies missing keywords, and calculates a transparent match score.
+    </p>
+</div>
+
+<!-- Main Interactive Form Card -->
+<div class="analysis-form-card">
+    <form id="resumeAnalysisForm" action="{{ url_for('analyze') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-grid">
+            
+            <!-- Column 1: PDF Resume Upload -->
+            <div class="form-column">
+                <div class="column-header">
+                    <div class="column-icon upload-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    </div>
+                    <div>
+                        <h2 class="column-title">1. Upload Resume (PDF)</h2>
+                        <p class="column-desc">Select or drag &amp; drop your resume in PDF format (Max 5MB).</p>
+                    </div>
+                </div>
+
+                <!-- Drag and Drop Zone -->
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="resumeInput" name="resume" accept=".pdf" class="file-input-hidden" required>
+                    
+                    <div class="dropzone-empty" id="dropzoneEmpty">
+                        <div class="dropzone-icon">
+                            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                                <polyline points="9 15 12 12 15 15"></polyline>
+                            </svg>
+                        </div>
+                        <p class="dropzone-text"><strong>Click to browse</strong> or drag and drop your PDF here</p>
+                        <span class="dropzone-hint">Standard text-selectable PDF format only</span>
+                    </div>
+
+                    <!-- File Selected State Preview -->
+                    <div class="dropzone-selected" id="dropzoneSelected" style="display: none;">
+                        <div class="file-info-box">
+                            <div class="file-pdf-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <div class="file-details">
+                                <span class="file-name" id="fileNameDisplay">resume.pdf</span>
+                                <span class="file-size" id="fileSizeDisplay">150 KB</span>
+                            </div>
+                            <button type="button" class="btn-remove-file" id="btnRemoveFile" title="Remove selected file">&times;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testing Utilities: Sample Resume Download -->
+                <div class="sample-action-bar">
+                    <span class="sample-label">Need a test file?</span>
+                    <a href="{{ url_for('download_sample_resume') }}" class="btn-text-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Download Sample Resume (.pdf)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Column 2: Job Description Text -->
+            <div class="form-column">
+                <div class="column-header">
+                    <div class="column-icon jd-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    </div>
+                    <div class="header-split">
+                        <div>
+                            <h2 class="column-title">2. Target Job Description</h2>
+                            <p class="column-desc">Paste the job posting, technical requirements, or role overview.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="jobDescriptionInput" 
+                        name="job_description" 
+                        class="job-textarea" 
+                        rows="9" 
+                        placeholder="Paste requirements, responsibilities, and qualifications here (e.g., 'Looking for a Python Developer with experience in Flask, Docker, PostgreSQL, and Git...')"
+                        required></textarea>
+                    
+                    <div class="textarea-footer">
+                        <span class="char-count" id="charCountDisplay">0 characters</span>
+                        <button type="button" class="btn-clear-text" id="btnClearJd" style="display: none;">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Testing Utilities: Sample Job Description 1-Click Filler -->
+                <div class="sample-action-bar">
+                    <span class="sample-label">Quick Testing:</span>
+                    <button type="button" class="btn-sample-fill" id="btnFillSampleJd">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                        Auto-fill Sample Job Description
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Submit Action Bar -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary-analyze" id="btnSubmitAnalysis">
+                <span class="btn-content-normal">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    Analyze Resume &amp; Calculate Skill Gap
+                </span>
+                <span class="btn-content-loading" style="display: none;">
+                    <span class="spinner"></span>
+                    Extracting Skills &amp; Analyzing...
+                </span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Educational Value Cards -->
+<div class="info-grid">
+    <div class="info-card">
+        <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <h3 class="info-title">100% In-Memory Safe</h3>
+        <p class="info-text">
+            Your resume stream is processed directly in RAM via <code>io.BytesIO</code>. Files are never saved to disk, preserving total candidate privacy.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        </div>
+        <h3 class="info-title">Boundary-Aware NLP</h3>
+        <p class="info-text">
+            Handles complex single-word, multi-word, and symbol skills like <em>C++</em>, <em>CI/CD</em>, <em>REST APIs</em>, and <em>Machine Learning</em> without false matches.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <div class="info-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        </div>
+        <h3 class="info-title">Transparent Math</h3>
+        <p class="info-text">
+            Scores are mathematically transparent: <code>(Matched Skills ÷ Job Skills) × 100</code>. No black-box algorithmic bias or unverifiable hiring claims.
+        </p>
+    </div>
+</div>
+{% endblock %}

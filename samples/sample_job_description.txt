@@ -1,0 +1,29 @@
+Title: Senior Python / Full Stack Software Engineer
+Location: Remote (US / Worldwide)
+Department: Engineering
+
+About the Role:
+We are looking for a skilled Software Engineer to build scalable web applications and data-driven APIs. In this role, you will collaborate with cross-functional teams to architect reliable backends, integrate modern front-ends, and manage cloud deployments.
+
+Responsibilities:
+- Design, build, and maintain efficient, reusable, and reliable backend services using Python and Flask or FastAPI.
+- Develop interactive, responsive user interfaces using JavaScript, TypeScript, React, and Tailwind CSS.
+- Manage relational and document databases including PostgreSQL, MySQL, and Redis for caching.
+- Build and consume REST APIs and GraphQL endpoints with robust unit testing (pytest) and CI/CD pipelines.
+- Deploy, monitor, and scale microservices using Docker, Kubernetes, and AWS cloud infrastructure.
+- Collaborate with product designers and engineers using Agile and Git.
+- Participate in code reviews, mentoring junior engineers, and system design discussions.
+
+Required Skills & Qualifications:
+- 3+ years of experience with Python, JavaScript, and SQL.
+- Strong proficiency with Flask, Django, or FastAPI web frameworks.
+- Frontend experience with React and modern CSS.
+- Hands-on experience with PostgreSQL and Redis.
+- Familiarity with Docker, CI/CD, and Git / GitHub.
+- Good understanding of REST API design and Unit Testing.
+- Excellent communication, problem solving, and teamwork abilities.
+
+Nice-to-Have Skills:
+- Experience with Kubernetes and AWS (Amazon Web Services).
+- Exposure to Machine Learning, Pandas, or Data Analysis.
+- Familiarity with TypeScript and Next.js.
